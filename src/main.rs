@@ -2,7 +2,10 @@ mod api;
 mod cli;
 mod utils;
 
+use crate::cli::cli;
 
 
-
-fn main() {}
+#[tokio::main]
+async fn main() {
+    cli().await;
+}

@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
+use reqwest::Client;
 
+use reqwest::Error;
+use crate::utils;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ApiResponse {
@@ -36,7 +39,9 @@ struct Cryptocurrency {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Quote {
-    USD: QuoteDetails,
+    #[serde(rename = "USD")]
+
+    usd: QuoteDetails,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -45,10 +50,6 @@ struct QuoteDetails {
     volume_24h: f64,
     // Add other fields as needed
 }
-
-use reqwest::Client;
-
-use reqwest::Error;
 
 
 pub async fn crypto() -> Result<(), Error> {
@@ -61,12 +62,7 @@ pub async fn crypto() -> Result<(), Error> {
         ("convert", "USD"),    // Convert market values to USD
     ];
 
-    let response = client.get(url)
-        .header("X-CMC_PRO_API_KEY", "YOUR API KEY HERE")
-        .query(&params)
-        .send()
-        .await?;
-    ;
+    let response = client.get(url).header("X-CMC_PRO_API_KEY", utils::load_api_key()).query(&params).send().await?;
 
 
     // Handle the response as per your requirements
